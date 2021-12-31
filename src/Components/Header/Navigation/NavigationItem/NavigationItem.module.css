@@ -1,0 +1,12 @@
+.navigationItem {
+    margin: 10px;
+}
+
+.navigationItem a {
+    text-decoration: none;
+    color: #fb743e;
+}
+
+.navigationItem a:hover {
+    color: #383e56;
+}
