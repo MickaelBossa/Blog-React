@@ -1,13 +1,13 @@
 // Style
-import classes from './NavigationItem.module.css';
+import './NavigationItem.css';
 
 // Librairies
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export default function NavigationItem(props) {
     return (
-        <li className={classes.navigationItem}>
-            <Link to={props.to}>{props.children}</Link>
+        <li className="navigationItem">
+            <NavLink to={props.to} className={({ isActive }) => "navigationItem" + (isActive ? " activated" : "")}>{props.children}</NavLink>
         </li>
     )
 }

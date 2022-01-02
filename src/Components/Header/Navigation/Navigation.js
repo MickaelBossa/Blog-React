@@ -7,9 +7,9 @@ import NavigationItem from './NavigationItem/NavigationItem.js';
 export default function Navigation() {
     return (
         <ul className={classes.navigation}>
-            <NavigationItem to='/'>Accueil</NavigationItem>
+            <NavigationItem exact to='/'>Accueil</NavigationItem>
             <NavigationItem to='/articles'>Articles</NavigationItem>
-            <NavigationItem to='/contact'>Contact</NavigationItem>
+            <NavigationItem exact to='/contact'>Contact</NavigationItem>
         </ul>
     )
 }
