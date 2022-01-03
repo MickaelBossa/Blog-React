@@ -2,13 +2,13 @@
 import {useParams} from 'react-router-dom'
 
 
-export default function Article(props) {
+export default function Article() {
 
-    const {id} = useParams()
+    const params = useParams()
 
     return (
         <h1>
-           Ma page article ({id}) 
+           Ma page article ({params.id}) 
         </h1>
     )
 }

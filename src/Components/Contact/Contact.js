@@ -1,7 +1,18 @@
-export default function Contact() {
+// Styles
+import classes from './Contact.module.css';
+
+// Librairies
+import { Link, Outlet } from 'react-router-dom';
+import routes from '../../config/routes';
+
+export default function Contact(props) {
     return (
-        <div>
+        <>
             <h1>Contact</h1>
-        </div>
+            <p>Par quel moyen de contact souhaitez-vous échanger ?</p>
+            <Link className={classes.button} to={routes.EMAIL}>Email</Link>
+            <Link className={classes.button} to={routes.PHONE}>Téléphone</Link>
+            <Outlet />
+        </>
     )
 }
