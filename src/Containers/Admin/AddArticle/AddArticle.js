@@ -1,3 +1,6 @@
+// Style
+import classes from './AddArticle.module.css';
+
 // Librairies
 import { useState } from 'react';
 
@@ -31,6 +34,17 @@ export default function AddArticle() {
             },
             value: '',
             label: 'Auteur de l\'article'
+        },
+        status: {
+            elementType: 'select',
+            elementConfig: {
+                options: [
+                    {value: 'Brouillon'},
+                    {value: 'Publié'}
+                ]
+            },
+            value: '',
+            label: 'Etat'
         }
     })
 
@@ -44,21 +58,24 @@ export default function AddArticle() {
     }
 
     const form = (
-        <form>
+        <form className={classes.add}>
             {formElementsArray.map((formElement) => (
                 <Input 
                 key={formElement.id}
                 value={formElement.config.value}
                 label={formElement.config.label}
+                type={formElement.config.elementType}
+                config={formElement.config.elementConfig}
                 />
             ))}
+            <input className={classes.submit} type="submit" value="Envoyer" />
         </form>
     )
 
     return (
-        <>
+        <div className='container'>
             <h1>Ajouter un article</h1>
             {form}     
-        </>
+        </div>
     )   
 }

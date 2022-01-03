@@ -1,0 +1,16 @@
+.input {
+    margin-bottom: 17px;
+}
+
+.input label {
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #fb743e;
+    display: block;
+}
+
+.input input, .input textarea, .input select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+}
