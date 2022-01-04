@@ -13,4 +13,8 @@
     width: 100%;
     padding: 10px;
     font-size: 1rem;
+    font-family: arial;
+    border-radius: 0.5rem;
+    border: 1px solid silver;
+    margin-top: 5px;
 }

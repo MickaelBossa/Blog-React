@@ -3,10 +3,15 @@
     background-color: #d3e0ea;
     margin: auto;
     border-radius: 0.5rem;
-    padding: 15px;
+    padding: 30px;
+    text-align: left;
 }
 
 .submit {
+    text-align: right;
+}
+
+.submit input {
     border: 0;
     padding: 10px;
     background-color: #fb743e;
@@ -16,7 +21,7 @@
     margin: 5px;
 }
 
-.submit:focus,
-.submit:hover {
+.submit input:focus,
+.submit input:hover {
     background-color: #d3450b;
 }

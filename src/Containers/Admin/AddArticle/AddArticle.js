@@ -48,6 +48,13 @@ export default function AddArticle() {
         }
     })
 
+// Fonctions
+const inputChangedHandler = (event, id) => {
+    const newInputs = {...inputs};
+    newInputs[id].value = event.target.value;
+    setInputs(newInputs);
+}
+
 // Constantes
     const formElementsArray = [];
     for(let key in inputs) {
@@ -62,13 +69,17 @@ export default function AddArticle() {
             {formElementsArray.map((formElement) => (
                 <Input 
                 key={formElement.id}
+                id={formElement.id}
                 value={formElement.config.value}
                 label={formElement.config.label}
                 type={formElement.config.elementType}
                 config={formElement.config.elementConfig}
+                changed={(e) => inputChangedHandler(e, formElement.id)}
                 />
             ))}
-            <input className={classes.submit} type="submit" value="Envoyer" />
+            <div className={classes.submit}>
+                <input type="submit" value="Envoyer" />
+            </div>
         </form>
     )
 
