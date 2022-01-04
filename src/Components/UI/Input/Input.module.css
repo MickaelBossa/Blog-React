@@ -18,3 +18,12 @@
     border: 1px solid silver;
     margin-top: 5px;
 }
+
+.input span {
+    color:red;
+}
+
+.invalid {
+    background: #f3c7c7;
+    border: 1px solid #e45454;
+}

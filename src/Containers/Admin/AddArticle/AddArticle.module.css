@@ -21,6 +21,11 @@
     margin: 5px;
 }
 
+.submit input:disabled {
+    opacity: .3;
+    cursor: not-allowed;
+}
+
 .submit input:focus,
 .submit input:hover {
     background-color: #d3450b;
