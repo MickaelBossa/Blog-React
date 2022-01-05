@@ -1,10 +1,10 @@
 const routes = {
     HOME: "/",
-    ARTICLES: "articles",
-    CONTACT: "contact",
+    ARTICLES: "/articles",
+    CONTACT: "/contact",
     EMAIL: "mail",
     PHONE: "telephone",
-    ADDARTICLE: 'add'
+    ADDARTICLE: '/add'
 }
 
 export default routes;

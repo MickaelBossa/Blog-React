@@ -10,7 +10,8 @@
 }
 
 .input input, .input textarea, .input select {
-    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
     padding: 10px;
     font-size: 1rem;
     font-family: arial;

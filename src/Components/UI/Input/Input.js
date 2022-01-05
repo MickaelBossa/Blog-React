@@ -43,7 +43,7 @@ export default function Input(props) {
           >
             {props.config.options.map((option) => (
               <option key={option.value} value={option.value}>
-                {option.value}
+                {option.displayValue}
               </option>
             ))}
           </select>

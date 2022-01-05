@@ -3,6 +3,9 @@ import classes from './AddArticle.module.css';
 
 // Librairies
 import { useState } from 'react';
+import axios from '../../../config/axios-firebase';
+import routes from '../../../config/routes';
+import { useNavigate } from 'react-router-dom';
 
 // Composants
 import Input from '../../../Components/UI/Input/Input';
@@ -26,7 +29,21 @@ export default function AddArticle() {
                 maxLength: 100,
             },
             touched: false,
-            errorMessage: 'Le titre doit faire entre 2 et 100 caractères'
+            errorMessage: 'Le titre ne doit pas être vide et être compris entre 2 et 100 caractères'
+        },
+        preview: {
+            elementType: 'textarea',
+            elementConfig: {},
+            value: '',
+            label: 'Accroche de l\'article',
+            valid: false,
+            validation: {
+                required: true,
+                minLength: 10,
+                maxLength: 150,
+            },
+            touched: false,
+            errorMessage: 'L\'accroche ne doit pas être vide et doit être comprise entre 10 et 150 caractères'
         },
         content: {
             elementType: 'textarea',
@@ -56,21 +73,21 @@ export default function AddArticle() {
                 maxLength: 25
             },
             touched: false,
-            errorMessage: 'L\'auteur doit faire entre 1 et 25 caractères'
+            errorMessage: 'L\'auteur ne doit pas être vide et faire maximum 25 caractères'
         },
         status: {
             elementType: 'select',
             elementConfig: {
                 options: [
-                    {value: 'Brouillon'},
-                    {value: 'Publié'}
+                    {value: true, displayValue: 'Brouillon'},
+                    {value: false, displayValue: 'Publié'}
                 ]
             },
-            value: '',
+            value: true,
             label: 'Etat',
             valid: true,
             validation: {}
-        }
+        },
     })
 
     const [validForm, setValidForm] = useState(false);
@@ -116,10 +133,28 @@ const inputChangedHandler = (event, id) => {
 const formHandler = (event) => {
     event.preventDefault();
 
-    console.log(event);
+    const article = {
+        title: inputs.title.value,
+        content: inputs.content.value,
+        author: inputs.author.value,
+        draft: inputs.status.value,
+        preview: inputs.preview.value,
+        date: new Date().toLocaleString('fr-FR')
+    }
+
+    axios.post('/articles.json', article)
+        .then(response => {
+            console.log(response);
+            navigate(routes.ARTICLES);
+        })
+        .catch(error => {
+            console.log(error);
+        })
 }
 
 // Constantes
+    const navigate = useNavigate();
+
     const formElementsArray = [];
     for(let key in inputs) {
         formElementsArray.push({
