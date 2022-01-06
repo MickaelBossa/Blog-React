@@ -1,6 +1,9 @@
 // Styles
 import classes from './DisplayedArticles.module.css';
 
+// Librairie
+import React from 'react';
+
 // Composants
 import DisplayedArticle from './DisplayedArticle/DisplayedArticle';
 

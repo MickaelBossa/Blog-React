@@ -1,5 +1,5 @@
 // Librairies
-import { useState, useEffect } from 'react';
+import { React, useState, useEffect } from 'react';
 import axios from '../../config/axios-firebase';
 
 // Composants
@@ -15,22 +15,28 @@ export default function Articles() {
 
         axios.get('/articles.json')
             .then(response => {
-                const articlesArray = [];
+
+                let articlesArray = [];
+                
                 for (let key in response.data) {
                     articlesArray.push({
                         ...response.data[key],
                         id: key,
                     })
                 }
+
+                // Mettre les derniers articles en premier
+                articlesArray.reverse();
+
+                // Trier les articles publiés des brouillons
+                articlesArray = articlesArray.filter((article) => article.draft == "false");
+
                 setArticles(articlesArray);
-                console.log(articlesArray);
             })
             .catch(error => {
                 console.log(error);
             });
     }, [])
-
-    // DisplayedArticles
 
     return (
         <div>

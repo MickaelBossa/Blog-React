@@ -1,16 +1,20 @@
 // Style
-import classes from './AddArticle.module.css';
+import classes from './ManageArticle.module.css';
 
 // Librairies
-import { useState } from 'react';
+import { React, useState } from 'react';
 import axios from '../../../config/axios-firebase';
 import routes from '../../../config/routes';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Composants
 import Input from '../../../Components/UI/Input/Input';
 
-export default function AddArticle() {
+export default function ManageArticle() {
+// Constantes
+    const location = useLocation();
+    const navigate = useNavigate();
+
 
 // States
     const [inputs, setInputs] = useState({
@@ -20,9 +24,9 @@ export default function AddArticle() {
                 type: 'text',
                 placeholder: 'Titre de l\'article'
             },
-            value: '',
+            value: location.state && location.state.article ? location.state.article.title : '',
             label: 'Titre de l\'article',
-            valid: false,
+            valid: location.state && location.state.article ? true : false,
             validation: {
                 required: true,
                 minLength: 2,
@@ -34,9 +38,9 @@ export default function AddArticle() {
         preview: {
             elementType: 'textarea',
             elementConfig: {},
-            value: '',
+            value: location.state && location.state.article ? location.state.article.preview : '',
             label: 'Accroche de l\'article',
-            valid: false,
+            valid: location.state && location.state.article ? true : false,
             validation: {
                 required: true,
                 minLength: 10,
@@ -48,9 +52,9 @@ export default function AddArticle() {
         content: {
             elementType: 'textarea',
             elementConfig: {},
-            value: '',
+            value: location.state && location.state.article ? location.state.article.content : '',
             label: 'Contenu de l\'article',
-            valid: false,
+            valid: location.state && location.state.article ? true : false,
             validation: {
                 required: true,
                 minLength: 5,
@@ -64,9 +68,9 @@ export default function AddArticle() {
                 type: 'text',
                 placeholder: 'Auteur de l\'article'
             },
-            value: '',
+            value: location.state && location.state.article ? location.state.article.author : '',
             label: 'Auteur de l\'article',
-            valid: false,
+            valid: location.state && location.state.article ? true : false,
             validation: {
                 required: true,
                 minLength: 1,
@@ -83,16 +87,35 @@ export default function AddArticle() {
                     {value: false, displayValue: 'Publié'}
                 ]
             },
-            value: true,
+            value: location.state && location.state.article ? location.state.article.draft : true,
             label: 'Etat',
             valid: true,
             validation: {}
         },
     })
 
-    const [validForm, setValidForm] = useState(false);
+    const [validForm, setValidForm] = useState(location.state && location.state.article ? true : false);
 
 // Fonctions
+const generateSlug = (str) => {
+    str = str.replace(/^\s+|\s+$/g, ''); // trim
+    str = str.toLowerCase();
+  
+    // remove accents, swap ñ for n, etc
+    var from = "àáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
+    var to   = "aaaaaeeeeiiiioooouuuunc------";
+
+    for (var i=0, l=from.length ; i<l ; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+
+    str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
+}
+
 const checkValidity = (value, rules) => {
     let isValid = true;
 
@@ -133,62 +156,78 @@ const inputChangedHandler = (event, id) => {
 const formHandler = (event) => {
     event.preventDefault();
 
+    const slug = generateSlug(inputs.title.value);
+
     const article = {
         title: inputs.title.value,
         content: inputs.content.value,
         author: inputs.author.value,
         draft: inputs.status.value,
         preview: inputs.preview.value,
-        date: new Date().toLocaleString('fr-FR')
+        date: new Date().toLocaleString('fr-FR'),
+        slug: slug
     }
 
-    axios.post('/articles.json', article)
+    if(location.state && location.state.article) {
+        axios.put('/articles/' + location.state.article.id +'.json', article)
         .then(response => {
             console.log(response);
-            navigate(routes.ARTICLES);
+            navigate(routes.ARTICLES + '/' + article.slug);
         })
         .catch(error => {
             console.log(error);
-        })
+        });
+    }
+    else {
+        axios.post('/articles.json', article)
+            .then(response => {
+                console.log(response);
+                navigate(routes.ARTICLES);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 }
 
 // Constantes
-    const navigate = useNavigate();
+const formElementsArray = [];
+for(let key in inputs) {
+    formElementsArray.push({
+        id: key,
+        config: inputs[key],
+    });
+}
 
-    const formElementsArray = [];
-    for(let key in inputs) {
-        formElementsArray.push({
-            id: key,
-            config: inputs[key],
-        });
-    }
-
-    const form = (
-        <form className={classes.add} onSubmit={(e) => formHandler(e)}>
-            {formElementsArray.map((formElement) => (
-                <Input 
-                key={formElement.id}
-                id={formElement.id}
-                value={formElement.config.value}
-                label={formElement.config.label}
-                type={formElement.config.elementType}
-                config={formElement.config.elementConfig}
-                valid={formElement.config.valid}
-                touched={formElement.config.touched}
-                errorMessage={formElement.config.errorMessage}
-                changed={(e) => inputChangedHandler(e, formElement.id)}
-                />
-            ))}
-            <div className={classes.submit}>
-                <input type="submit" value="Ajouter un article" disabled={!validForm} />
-            </div>
-        </form>
-    )
-
-    return (
-        <div className='container'>
-            <h1>Ajouter un article</h1>
-            {form}     
+const form = (
+    <form className={classes.add} onSubmit={(e) => formHandler(e)}>
+        {formElementsArray.map((formElement) => (
+            <Input 
+            key={formElement.id}
+            id={formElement.id}
+            value={formElement.config.value}
+            label={formElement.config.label}
+            type={formElement.config.elementType}
+            config={formElement.config.elementConfig}
+            valid={formElement.config.valid}
+            touched={formElement.config.touched}
+            errorMessage={formElement.config.errorMessage}
+            changed={(e) => inputChangedHandler(e, formElement.id)}
+            />
+        ))}
+        <div className={classes.submit}>
+            <input type="submit" value={location.state && location.state.article ? "Modifier l'article" : "Ajouter un article"} disabled={!validForm} />
         </div>
-    )   
+    </form>
+)
+
+return (
+    <div className='container'>
+        {location.state && location.state.article ?
+         <h1>Modifier un article</h1> 
+         : 
+         <h1>Ajouter un article</h1>}
+        {form}     
+    </div>
+)   
 }

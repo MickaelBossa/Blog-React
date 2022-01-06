@@ -2,6 +2,7 @@
 import classes from './Contact.module.css';
 
 // Librairies
+import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import routes from '../../config/routes';
 
