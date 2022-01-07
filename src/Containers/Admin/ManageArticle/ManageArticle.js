@@ -6,6 +6,7 @@ import { React, useState } from 'react';
 import axios from '../../../config/axios-firebase';
 import routes from '../../../config/routes';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { checkValidity } from '../../../shared/utility';
 
 // Composants
 import Input from '../../../Components/UI/Input/Input';
@@ -116,24 +117,6 @@ const generateSlug = (str) => {
     return str;
 }
 
-const checkValidity = (value, rules) => {
-    let isValid = true;
-
-    if(rules.required) {
-        isValid = value.trim() !== '' && isValid;
-    }
-
-    if(rules.minLength) {
-        isValid = value.length >= rules.minLength && isValid;
-    }
-
-    if(rules.maxLength) {
-        isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    return isValid
-}
-
 const inputChangedHandler = (event, id) => {
 // Change la valeur
     const newInputs = {...inputs};
@@ -219,7 +202,7 @@ const form = (
             <input type="submit" value={location.state && location.state.article ? "Modifier l'article" : "Ajouter un article"} disabled={!validForm} />
         </div>
     </form>
-)
+);
 
 return (
     <div className='container'>

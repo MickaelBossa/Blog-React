@@ -14,6 +14,7 @@ import Contact from "../../Components/Contact/Contact.js";
 import Article from "../Articles/Article/Article.js";
 import Error404 from "../../Components/Error404/Error404.js";
 import ManageArticle from "../Admin/ManageArticle/ManageArticle";
+import Authentification from "../Security/Authentification/Authentification";
 
 function App() {
   return (
@@ -35,6 +36,11 @@ function App() {
             exact
             path={routes.MANAGE_ARTICLE}
             element={<ManageArticle />}
+          />
+          <Route
+          exact
+          path={routes.AUTHENTIFICATION}
+          element={<Authentification />}
           />
           <Route path="*" element={<Error404 />} />
         </Routes>

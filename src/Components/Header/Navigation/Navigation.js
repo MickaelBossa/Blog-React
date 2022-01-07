@@ -21,6 +21,9 @@ export default function Navigation() {
       <NavigationItem exact to={routes.MANAGE_ARTICLE}>
         Ajouter
       </NavigationItem>
+      <NavigationItem exact to={routes.AUTHENTIFICATION}>
+        Authentification
+      </NavigationItem>
     </ul>
   );
 }
