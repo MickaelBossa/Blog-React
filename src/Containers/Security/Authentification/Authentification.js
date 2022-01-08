@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 import { checkValidity } from '../../../shared/utility';
 import { useNavigate } from 'react-router-dom';
 import routes from '../../../config/routes';
+import fire from '../../../config/firebase';
 
 // Composants
 import Input from '../../../Components/UI/Input/Input';
@@ -139,7 +140,6 @@ const form = (
         </div>
     </form>
 )
-
 
     return (
         <>
