@@ -1,4 +1,5 @@
-import { initializeApp } from "firebase/app";
+import firebase from "firebase/compat/app";
+import 'firebase/compat/auth';
 
 let apiKey = process.env.REACT_APP_API_KEY;
 let authDomain = process.env.REACT_APP_AUTH_DOMAIN;
@@ -19,6 +20,6 @@ const firebaseConfig = {
   };
   
   // Initialize Firebase
-  const fire = initializeApp(firebaseConfig);
+  const fire = firebase.initializeApp(firebaseConfig);
 
   export default fire;

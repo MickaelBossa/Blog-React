@@ -7,6 +7,7 @@ import axios from '../../../config/axios-firebase';
 import routes from '../../../config/routes';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { checkValidity } from '../../../shared/utility';
+import fire from '../../../config/firebase';
 
 // Composants
 import Input from '../../../Components/UI/Input/Input';
@@ -151,26 +152,32 @@ const formHandler = (event) => {
         slug: slug
     }
 
-    if(location.state && location.state.article) {
-        axios.put('/articles/' + location.state.article.id +'.json', article)
-        .then(response => {
-            console.log(response);
-            navigate(routes.ARTICLES + '/' + article.slug);
+    fire.auth().currentUser.getIdToken()
+        .then(token => {
+            if(location.state && location.state.article) {
+                axios.put('/articles/' + location.state.article.id +'.json?auth=' + token, article)
+                .then(response => {
+                    console.log(response);
+                    navigate(routes.ARTICLES + '/' + article.slug);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+            else {
+                axios.post('/articles.json', article)
+                    .then(response => {
+                        console.log(response);
+                        navigate(routes.ARTICLES);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } 
         })
         .catch(error => {
             console.log(error);
         });
-    }
-    else {
-        axios.post('/articles.json', article)
-            .then(response => {
-                console.log(response);
-                navigate(routes.ARTICLES);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
 }
 
 // Constantes

@@ -6,6 +6,7 @@ import { React, useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "../../../config/axios-firebase";
 import routes from "../../../config/routes";
+import fire from "../../../config/firebase";
 
 export default function Article(props) {
   // State
@@ -35,14 +36,20 @@ export default function Article(props) {
 
   // Fonctions
   const deleteClickedHandler = () => {
-    axios
-      .delete("/articles/" + article.id + ".json")
-      .then((response) => {
-        navigate(routes.HOME);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      fire.auth().currentUser.getIdToken()
+        .then(token => {
+          axios
+          .delete("/articles/" + article.id + ".json?auth=" + token)
+          .then((response) => {
+            navigate(routes.HOME);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        })
   };
 
   // Constantes
@@ -59,18 +66,19 @@ export default function Article(props) {
           <p>{article.preview}</p>
         </div>
         {article.content}
-        <div className={classes.button}>
-          <Link to={routes.MANAGE_ARTICLE} state={{ article: article }}>
-            <button>Modifier</button>
-          </Link>
-          <button onClick={deleteClickedHandler}>Supprimer</button>
-        </div>
+        {props.user ? 
+          <div className={classes.button}>
+            <Link to={routes.MANAGE_ARTICLE} state={{ article: article }}>
+              <button>Modifier</button>
+            </Link>
+            <button onClick={deleteClickedHandler}>Supprimer</button>
+          </div> 
+        : null }
       </div>
-
       <div className={classes.author}>
         Publié par <b>{article.author}</b>
         <span>le {date}.</span>
-        {article.draft ? <span className={classes.badge}>Brouillon</span> : null}
+        {article.draft === true ? <span className={classes.badge}>Brouillon</span> : null}
       </div>
     </div>
   );

@@ -4,11 +4,23 @@ import classes from "./Navigation.module.css";
 // Librairies
 import React from 'react';
 import routes from "../../../config/routes.js";
+import fire from "../../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 // Composants
 import NavigationItem from "./NavigationItem/NavigationItem.js";
 
-export default function Navigation() {
+export default function Navigation(props) {
+
+  // Constantes
+  const navigate = useNavigate();
+
+  // Fonctions
+  const logoutClickedHandler = () => {
+    fire.auth().signOut();
+    navigate(routes.HOME);
+  }
+
   return (
     <ul className={classes.navigation}>
       <NavigationItem exact to={routes.HOME}>
@@ -18,12 +30,13 @@ export default function Navigation() {
       <NavigationItem exact to={routes.CONTACT}>
         Contact
       </NavigationItem>
-      <NavigationItem exact to={routes.MANAGE_ARTICLE}>
+      { props.user ? <NavigationItem exact to={routes.MANAGE_ARTICLE}>
         Ajouter
-      </NavigationItem>
-      <NavigationItem exact to={routes.AUTHENTIFICATION}>
+      </NavigationItem> : null }
+      { !props.user ? <NavigationItem exact to={routes.AUTHENTIFICATION}>
         Authentification
-      </NavigationItem>
+      </NavigationItem> : null }
+      { props.user ? <button className={classes.logout} onClick={logoutClickedHandler} >Déconnexion</button> : null }
     </ul>
   );
 }

@@ -11,7 +11,7 @@ import Footer from '../../Components/Footer/Footer.js';
 export default function Layout(props) {
     return (
         <div className={classes.layout}>
-            <Header />
+            <Header user={props.user}/>
 
             <div className={classes.content}>
                 {props.children}

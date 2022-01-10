@@ -42,13 +42,18 @@ export default function Authentification() {
             valid: false,
             validation: {
                 required: true,
+                minLength: 6,
             },
             touched: false,
-            errorMessage: "Le mot de passe doit être renseigné"
+            errorMessage: "Le mot de passe doit contenir au moins 6 caractères"
         },
     });
 
     const [validForm, setValidForm] = useState(false);
+
+    const [emailError, setEmailError] = useState(false);
+
+    const [loginError, setLoginError] = useState(false);
 
 // Fonctions
     const inputChangedHandler = (event, id) => {
@@ -77,7 +82,19 @@ export default function Authentification() {
             password: inputs.password.value
         }
 
-        navigate(routes.HOME);
+        fire
+            .auth()
+            .createUserWithEmailAndPassword(user.email, user.password)
+            .then((response) => {
+                navigate(routes.HOME);
+            })
+            .catch((error) => {
+                switch(error.code) {
+                    case'auth/email-already-in-use':
+                        setEmailError(true);
+                        break;
+                }
+            });
     }
 
     const loginClickedHandler = () => {
@@ -87,7 +104,21 @@ export default function Authentification() {
             password: inputs.password.value
         }
 
-        navigate(routes.HOME);
+        fire
+            .auth()
+            .signInWithEmailAndPassword(user.email, user.password)
+            .then(response => {
+                navigate(routes.HOME);
+            })
+            .catch(error => {
+                switch(error.code) {
+                    case "auth/invalide-email":
+                    case "auth/user-disabled":
+                    case "auth/user-not-found":
+                        setLoginError(true);
+                        break
+                }
+            });
     }
 
     const formHandler = event => {
@@ -145,6 +176,8 @@ const form = (
         <>
             <h1>Authentification</h1>
             <div className={classes.form}>
+                {loginError ? <div className={classes.alert}>Impossible de vous authentifier.</div> : null}
+                {emailError ? <div className={classes.alert}>Cette adresse email est déjà utilisée.</div> : null}
                 {form}
             </div>
         </>

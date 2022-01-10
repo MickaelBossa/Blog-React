@@ -7,7 +7,7 @@ import React from 'react';
 // Composants
 import Navigation from './Navigation/Navigation.js';
 
-export default function Header() {
+export default function Header(props) {
     return (
         <>
             <header className={classes.header}>
@@ -16,7 +16,7 @@ export default function Header() {
                         LOGO
                     </div>
                     <nav>
-                        <Navigation />
+                        <Navigation user={props.user} />
                     </nav>
                 </div>
             </header>

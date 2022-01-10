@@ -2,9 +2,10 @@
 import "./App.css";
 
 // Librairies
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes } from "react-router-dom";
 import routes from "../../config/routes.js";
+import fire from '../../config/firebase';
 
 // Composants
 import Layout from "../../HOC/Layout/Layout.js";
@@ -17,31 +18,48 @@ import ManageArticle from "../Admin/ManageArticle/ManageArticle";
 import Authentification from "../Security/Authentification/Authentification";
 
 function App() {
+
+  const [user, setUser] = useState('');
+
+  useEffect(() => {
+    authListener();
+  }, []);
+
+  const authListener = () => {
+    fire.auth().onAuthStateChanged(user => {
+      if(user) {
+        setUser(user);
+      } else {
+        setUser('');
+      }
+    });
+  };
+
   return (
     <div className="App">
-      <Layout>
+      <Layout user={user}>
         <Routes>
           <Route exact path={routes.HOME} element={<Home />} />
           <Route exact path={routes.ARTICLES} element={<Articles />} />
           <Route
             exact
             path={routes.ARTICLES + "/:slug"}
-            element={<Article />}
+            element={<Article user={user} />}
           />
           <Route exact path={routes.CONTACT} element={<Contact />}>
             <Route exact path={routes.EMAIL} element={<p>John.doe@google.com</p>} />
             <Route exact path={routes.PHONE} element={<p>06 06 06 06 06</p>} />
           </Route>
-          <Route
+          { user ? <Route
             exact
             path={routes.MANAGE_ARTICLE}
             element={<ManageArticle />}
-          />
-          <Route
+          /> : null }
+          { !user ? <Route
           exact
           path={routes.AUTHENTIFICATION}
           element={<Authentification />}
-          />
+          /> : null }
           <Route path="*" element={<Error404 />} />
         </Routes>
       </Layout>
